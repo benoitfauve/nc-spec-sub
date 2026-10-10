@@ -1,0 +1,9 @@
+# local documentation, not published
+docs/
+
+# dependencies and generated audio
+node_modules/
+out/
+
+# OS / editor
+.DS_Store
