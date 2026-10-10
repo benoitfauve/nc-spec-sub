@@ -66,7 +66,9 @@ x → STFT → |X|² ─┬─────────────────�
 - **Noise estimate**: for each frequency bin, the median of the power over the last
   0.5 s of frames (31 frames at 8 kHz). Speech occupies a given bin for less than half
   of that window most of the time, so the median follows the noise without a voice
-  activity detector.
+  activity detector. Each bin's window is kept sorted and updated with one removal and
+  one insertion per frame instead of a full sort; see
+  [sliding-median.md](sliding-median.md).
 - **Subtraction**: the gain is applied to the complex spectrum, so the noisy phase is
   kept.
 
@@ -76,9 +78,11 @@ x → STFT → |X|² ─┬─────────────────�
 src/
   main.ts      command-line entry point
   specsub.ts   noise estimate and spectral subtraction
+  quantile.ts  sliding quantile on a sorted window, per bin
   fft.ts       radix-2 FFT
   wav.ts       16-bit PCM WAV read and write
 testdata/      sample recording
+sliding-median.md   how the sorted-window update works
 ```
 
 ## Development

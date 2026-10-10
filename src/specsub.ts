@@ -2,6 +2,7 @@
 // (no explicit speech / non-speech detection, after Evans & Mason, Eurospeech 2001).
 
 import { fft } from "./fft.ts";
+import { SlidingQuantile } from "./quantile.ts";
 
 export interface SpecSubOptions {
   alpha: number; // over-subtraction factor applied to the noise power
@@ -29,9 +30,9 @@ export function spectralSubtract(x: Float64Array, fs: number, opts: Partial<Spec
   // which sums to 1 at 50% overlap, so overlap-add needs no extra gain.
   const win = Float64Array.from({ length: n }, (_, i) => Math.sqrt(0.5 - 0.5 * Math.cos((2 * Math.PI * i) / n)));
 
-  const history: Float64Array[] = []; // past power spectra, oldest first
+  const history = new SlidingQuantile(bins, histLen); // past power spectra, sorted per bin
+  const power = new Float64Array(bins);
   const noise = new Float64Array(bins);
-  const column = new Float64Array(histLen);
   const re = new Float64Array(n);
   const im = new Float64Array(n);
   const y = new Float64Array(x.length + n);
@@ -43,17 +44,11 @@ export function spectralSubtract(x: Float64Array, fs: number, opts: Partial<Spec
     }
     fft(re, im);
 
-    const power = new Float64Array(bins);
     for (let k = 0; k < bins; k++) power[k] = re[k] * re[k] + im[k] * im[k];
 
     // Noise estimate: per-bin median of the last histLen frames, current included.
     history.push(power);
-    if (history.length > histLen) history.shift();
-    const m = history.length;
-    for (let k = 0; k < bins; k++) {
-      for (let f = 0; f < m; f++) column[f] = history[f][k];
-      noise[k] = column.subarray(0, m).sort()[m >> 1];
-    }
+    history.query(0.5, noise);
 
     // Power subtraction with a floor, applied as a real gain so the noisy phase is kept.
     for (let k = 0; k < bins; k++) {
