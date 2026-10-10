@@ -18,13 +18,38 @@ export const defaults: SpecSubOptions = {
   medianSec: 0.5,
 };
 
-export function spectralSubtract(x: Float64Array, fs: number, opts: Partial<SpecSubOptions> = {}): Float64Array {
-  const { alpha, beta, frameMs, medianSec } = { ...defaults, ...opts };
+export interface FrameSetup {
+  n: number; // FFT / frame length in samples
+  hop: number; // frame step in samples
+  histLen: number; // frames in the median history
+  bins: number; // one-sided spectrum size, n / 2 + 1
+}
 
+export function frameSetup(fs: number, opts: Partial<SpecSubOptions> = {}): FrameSetup {
+  const { frameMs, medianSec } = { ...defaults, ...opts };
   const n = 1 << Math.round(Math.log2((frameMs / 1000) * fs)); // 256 at 8 kHz
   const hop = n / 2; // 50% overlap: 16 ms at 8 kHz
   const histLen = Math.max(1, Math.round(medianSec / (hop / fs))); // 31 frames at 8 kHz
-  const bins = n / 2 + 1;
+  return { n, hop, histLen, bins: n / 2 + 1 };
+}
+
+// Per-frame view of the internals, for inspection (see trace.ts).
+// The arrays are reused between frames: copy them if you keep them.
+export interface FrameTrace {
+  start: number; // first input sample of the frame
+  power: Float64Array; // noisy power |X|^2
+  noise: Float64Array; // noise estimate N (running median of power)
+  gain: Float64Array; // amplitude gain applied to X
+}
+
+export function spectralSubtract(
+  x: Float64Array,
+  fs: number,
+  opts: Partial<SpecSubOptions> = {},
+  onFrame?: (frame: FrameTrace) => void,
+): Float64Array {
+  const { alpha, beta } = { ...defaults, ...opts };
+  const { n, hop, histLen, bins } = frameSetup(fs, opts);
 
   // sqrt-periodic-Hann on analysis and synthesis: the product is a Hann window,
   // which sums to 1 at 50% overlap, so overlap-add needs no extra gain.
@@ -33,6 +58,7 @@ export function spectralSubtract(x: Float64Array, fs: number, opts: Partial<Spec
   const history = new SlidingQuantile(bins, histLen); // past power spectra, sorted per bin
   const power = new Float64Array(bins);
   const noise = new Float64Array(bins);
+  const gain = new Float64Array(bins);
   const re = new Float64Array(n);
   const im = new Float64Array(n);
   const y = new Float64Array(x.length + n);
@@ -55,6 +81,7 @@ export function spectralSubtract(x: Float64Array, fs: number, opts: Partial<Spec
       const p = power[k];
       const clean = Math.max(p - alpha * noise[k], beta * p);
       const g = p > 0 ? Math.sqrt(clean / p) : 0;
+      gain[k] = g;
       re[k] *= g;
       im[k] *= g;
       if (k > 0 && k < n / 2) {
@@ -62,6 +89,8 @@ export function spectralSubtract(x: Float64Array, fs: number, opts: Partial<Spec
         im[n - k] = -im[k];
       }
     }
+
+    onFrame?.({ start, power, noise, gain });
 
     fft(re, im, true);
     for (let i = 0; i < n; i++) y[start + i] += re[i] * win[i];

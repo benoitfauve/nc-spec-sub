@@ -72,16 +72,40 @@ x → STFT → |X|² ─┬─────────────────�
 - **Subtraction**: the gain is applied to the complex spectrum, so the noisy phase is
   kept.
 
+## Notebook
+
+[notebooks/how-it-works.ipynb](notebooks/how-it-works.ipynb) walks through the
+algorithm step by step on the example recording: noisy spectrogram, the median noise
+estimate in one bin and in all bins, the gain mask, before and after, the effect of
+alpha and of the floor beta, and what happens to a steady tone added to the
+recording, with audio players.
+
+The plots come from the TypeScript code itself: `src/trace.ts` runs the same
+`spectralSubtract` and saves its per-frame internals to `out/trace/`, and the notebook
+only loads and plots them.
+
+```bash
+node src/trace.ts testdata/throwitaway.noisy.wav out/trace/alpha-2   # what the notebook runs
+```
+
+To run the notebook you need Node on the `PATH` and a Python environment with numpy,
+matplotlib and ipykernel. It is committed without outputs: run it to see the plots and
+listen to the audio. Outputs are stripped on commit by
+[nbstripout](https://github.com/kynan/nbstripout); after cloning, set it up with
+`pip install nbstripout && nbstripout --install --attributes .gitattributes`.
+
 ## Layout
 
 ```
 src/
   main.ts      command-line entry point
+  trace.ts     runs the algorithm and saves its internals for the notebook
   specsub.ts   noise estimate and spectral subtraction
   quantile.ts  sliding quantile on a sorted window, per bin
   fft.ts       radix-2 FFT
   wav.ts       16-bit PCM WAV read and write
 testdata/      sample recording
+notebooks/     how-it-works.ipynb
 sliding-median.md   how the sorted-window update works
 ```
 
