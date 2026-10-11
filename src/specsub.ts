@@ -9,6 +9,9 @@ export interface SpecSubOptions {
   beta: number; // spectral floor, as a fraction of the noisy power
   frameMs: number; // analysis frame length (rounded to a power of two in samples)
   medianSec: number; // length of the median history
+  // How the median window starts: "grow" uses only the frames seen so far;
+  // "zeros" starts with a window full of zeros, as the 2001 demo did (nlss.cpp).
+  warmup: "grow" | "zeros";
 }
 
 export const defaults: SpecSubOptions = {
@@ -16,6 +19,7 @@ export const defaults: SpecSubOptions = {
   beta: 0.01,
   frameMs: 32,
   medianSec: 0.5,
+  warmup: "grow",
 };
 
 export interface FrameSetup {
@@ -48,7 +52,7 @@ export function spectralSubtract(
   opts: Partial<SpecSubOptions> = {},
   onFrame?: (frame: FrameTrace) => void,
 ): Float64Array {
-  const { alpha, beta } = { ...defaults, ...opts };
+  const { alpha, beta, warmup } = { ...defaults, ...opts };
   const { n, hop, histLen, bins } = frameSetup(fs, opts);
 
   // sqrt-periodic-Hann on analysis and synthesis: the product is a Hann window,
@@ -56,6 +60,10 @@ export function spectralSubtract(
   const win = Float64Array.from({ length: n }, (_, i) => Math.sqrt(0.5 - 0.5 * Math.cos((2 * Math.PI * i) / n)));
 
   const history = new SlidingQuantile(bins, histLen); // past power spectra, sorted per bin
+  if (warmup === "zeros") {
+    const silence = new Float64Array(bins);
+    for (let i = 0; i < histLen; i++) history.push(silence);
+  }
   const power = new Float64Array(bins);
   const noise = new Float64Array(bins);
   const gain = new Float64Array(bins);

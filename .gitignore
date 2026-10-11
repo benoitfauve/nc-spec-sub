@@ -5,5 +5,8 @@ docs/
 node_modules/
 out/
 
+# scratch notes, not published
+tmp/
+
 # OS / editor
 .DS_Store

@@ -18,7 +18,7 @@ Node.js 23.6 or later. Node runs the `.ts` sources directly, so there is no buil
 ## Usage
 
 ```bash
-node src/main.ts in.wav out.wav [--alpha 2] [--beta 0.01]
+node src/main.ts in.wav out.wav [--alpha 2] [--beta 0.01] [--warmup grow]
 ```
 
 Input must be 16-bit PCM WAV; only the first channel is used. Output is 16-bit mono at
@@ -28,6 +28,7 @@ the input sample rate.
 |---|---|---|
 | `--alpha` | 2 | Over-subtraction factor on the noise power. Higher removes more noise and adds more musical noise. |
 | `--beta` | 0.01 | Spectral floor, as a fraction of the noisy power (0.01 is -20 dB). |
+| `--warmup` | grow | How the median window starts. `grow`: median of the frames seen so far. `zeros`: the window starts full of zeros, as in the 2001 demo, so nothing is subtracted until half the window holds real frames. |
 
 ## Example
 

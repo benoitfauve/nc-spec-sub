@@ -1,5 +1,5 @@
 // Runs spectral subtraction and saves its internals for plotting (see notebooks/).
-// Usage: node src/trace.ts in.wav out-dir [--alpha 2] [--beta 0.01]
+// Usage: node src/trace.ts in.wav out-dir [--alpha 2] [--beta 0.01] [--warmup grow|zeros]
 //
 // Writes to out-dir:
 //   meta.json                  sizes, sample rate and parameters
@@ -10,25 +10,34 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { readWav, writeWav } from "./wav.ts";
-import { defaults, frameSetup, spectralSubtract } from "./specsub.ts";
+import { defaults, frameSetup, spectralSubtract, type SpecSubOptions } from "./specsub.ts";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
   options: {
     alpha: { type: "string" },
     beta: { type: "string" },
+    warmup: { type: "string" },
   },
 });
 
 if (positionals.length !== 2) {
-  console.error(`usage: node src/trace.ts in.wav out-dir [--alpha ${defaults.alpha}] [--beta ${defaults.beta}]`);
+  console.error(
+    `usage: node src/trace.ts in.wav out-dir [--alpha ${defaults.alpha}] [--beta ${defaults.beta}] [--warmup grow|zeros]`,
+  );
   process.exit(1);
 }
 
 const [inPath, outDir] = positionals;
-const opts = {
+const warmup = values.warmup ?? defaults.warmup;
+if (warmup !== "grow" && warmup !== "zeros") {
+  console.error(`--warmup must be grow or zeros, got ${warmup}`);
+  process.exit(1);
+}
+const opts: Pick<SpecSubOptions, "alpha" | "beta" | "warmup"> = {
   alpha: values.alpha !== undefined ? Number(values.alpha) : defaults.alpha,
   beta: values.beta !== undefined ? Number(values.beta) : defaults.beta,
+  warmup,
 };
 
 const { fs, x } = readWav(inPath);
@@ -58,4 +67,4 @@ writeFileSync(
   JSON.stringify({ input: inPath, fs, samples: x.length, frames, ...setup, ...opts }, null, 2) + "\n",
 );
 
-console.log(`${inPath} -> ${outDir}: ${frames} frames x ${setup.bins} bins, alpha=${opts.alpha}, beta=${opts.beta}`);
+console.log(`${inPath} -> ${outDir}: ${frames} frames x ${setup.bins} bins, alpha=${opts.alpha}, beta=${opts.beta}, warmup=${warmup}`);
