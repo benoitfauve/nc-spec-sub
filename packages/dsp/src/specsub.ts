@@ -42,7 +42,7 @@ export function frameSetup(fs: number, opts: Partial<SpecSubOptions> = {}): Fram
 export interface FrameTrace {
   start: number; // first input sample of the frame
   power: Float64Array; // noisy power |X|^2
-  noise: Float64Array; // noise estimate N (running median of power)
+  noise: Float32Array; // noise estimate N (running median of power)
   gain: Float64Array; // amplitude gain applied to X
 }
 
@@ -65,7 +65,7 @@ export function spectralSubtract(
     for (let i = 0; i < histLen; i++) history.push(silence);
   }
   const power = new Float64Array(bins);
-  const noise = new Float64Array(bins);
+  const noise = new Float32Array(bins);
   const gain = new Float64Array(bins);
   const fft = new FFT(n);
   const re = new Float64Array(n);
