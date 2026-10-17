@@ -1,8 +1,8 @@
-// CLI: node src/main.ts in.wav out.wav [--alpha 2] [--beta 0.01]
+// CLI: node packages/cli/src/specsub.ts in.wav out.wav [--alpha 2] [--beta 0.01]
 
 import { parseArgs } from "node:util";
-import { readWav, writeWav } from "./wav.ts";
-import { defaults, spectralSubtract } from "./specsub.ts";
+import { readWav, writeWav } from "../../dsp/src/wav.ts";
+import { defaults, spectralSubtract } from "../../dsp/src/specsub.ts";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -16,7 +16,7 @@ const { values, positionals } = parseArgs({
 
 if (values.help || positionals.length !== 2) {
   console.log(
-    `usage: node src/main.ts in.wav out.wav [--alpha ${defaults.alpha}] [--beta ${defaults.beta}] [--warmup grow|zeros]`,
+    `usage: node packages/cli/src/specsub.ts in.wav out.wav [--alpha ${defaults.alpha}] [--beta ${defaults.beta}] [--warmup grow|zeros]`,
   );
   process.exit(values.help ? 0 : 1);
 }

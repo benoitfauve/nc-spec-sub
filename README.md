@@ -18,7 +18,7 @@ Node.js 23.6 or later. Node runs the `.ts` sources directly, so there is no buil
 ## Usage
 
 ```bash
-node src/main.ts in.wav out.wav [--alpha 2] [--beta 0.01] [--warmup grow]
+node packages/cli/src/specsub.ts in.wav out.wav [--alpha 2] [--beta 0.01] [--warmup grow]
 ```
 
 Input must be 16-bit PCM WAV; only the first channel is used. Output is 16-bit mono at
@@ -36,7 +36,7 @@ the input sample rate.
 
 ```bash
 mkdir -p out
-node src/main.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav
+node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav
 ```
 
 The same thing as an npm script:
@@ -49,7 +49,7 @@ Try a gentler setting (alpha 0.25 gave the best speech recognition results in th
 Eurospeech 2001 study) and compare by ear:
 
 ```bash
-node src/main.ts testdata/throwitaway.noisy.wav out/throwitaway.a025.wav --alpha 0.25
+node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.a025.wav --alpha 0.25
 ```
 
 ## How it works
@@ -81,12 +81,12 @@ estimate in one bin and in all bins, the gain mask, before and after, the effect
 alpha and of the floor beta, and what happens to a steady tone added to the
 recording, with audio players.
 
-The plots come from the TypeScript code itself: `src/trace.ts` runs the same
+The plots come from the TypeScript code itself: `packages/cli/src/trace.ts` runs the same
 `spectralSubtract` and saves its per-frame internals to `out/trace/`, and the notebook
 only loads and plots them.
 
 ```bash
-node src/trace.ts testdata/throwitaway.noisy.wav out/trace/alpha-2   # what the notebook runs
+node packages/cli/src/trace.ts testdata/throwitaway.noisy.wav out/trace/alpha-2   # what the notebook runs
 ```
 
 To run the notebook you need Node on the `PATH` and a Python environment with numpy,
@@ -98,13 +98,15 @@ listen to the audio. Outputs are stripped on commit by
 ## Layout
 
 ```
-src/
-  main.ts      command-line entry point
-  trace.ts     runs the algorithm and saves its internals for the notebook
-  specsub.ts   noise estimate and spectral subtraction
-  quantile.ts  sliding quantile on a sorted window, per bin
-  fft.ts       radix-2 FFT
-  wav.ts       16-bit PCM WAV read and write
+packages/
+  dsp/src/
+    specsub.ts   noise estimate and spectral subtraction
+    quantile.ts  sliding quantile on a sorted window, per bin
+    fft.ts       radix-2 FFT
+    wav.ts       16-bit PCM WAV read and write
+  cli/src/
+    specsub.ts   command-line entry point
+    trace.ts     runs the algorithm and saves its internals for the notebook
 testdata/      sample recording
 notebooks/     how-it-works.ipynb
 sliding-median.md   how the sorted-window update works

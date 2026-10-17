@@ -2,7 +2,7 @@
 
 The noise estimate is, for every frequency bin, the median of that bin's power over
 the last 0.5 s (31 frames at 8 kHz). Every 16 ms one frame enters the window and the
-oldest one leaves. This note explains how `SlidingQuantile` (`src/quantile.ts`) keeps
+oldest one leaves. This note explains how `SlidingQuantile` (`packages/dsp/src/quantile.ts`) keeps
 that median up to date without sorting the window again on each frame.
 
 ## The problem

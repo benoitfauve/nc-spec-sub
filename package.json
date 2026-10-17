@@ -6,8 +6,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node src/main.ts",
-    "demo": "node src/main.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav",
+    "start": "node packages/cli/src/specsub.ts",
+    "demo": "node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav",
     "typecheck": "tsc -p ."
   },
   "engines": {

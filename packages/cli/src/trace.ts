@@ -1,5 +1,5 @@
 // Runs spectral subtraction and saves its internals for plotting (see notebooks/).
-// Usage: node src/trace.ts in.wav out-dir [--alpha 2] [--beta 0.01] [--warmup grow|zeros]
+// Usage: node packages/cli/src/trace.ts in.wav out-dir [--alpha 2] [--beta 0.01] [--warmup grow|zeros]
 //
 // Writes to out-dir:
 //   meta.json                  sizes, sample rate and parameters
@@ -9,8 +9,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { readWav, writeWav } from "./wav.ts";
-import { defaults, frameSetup, spectralSubtract, type SpecSubOptions } from "./specsub.ts";
+import { readWav, writeWav } from "../../dsp/src/wav.ts";
+import { defaults, frameSetup, spectralSubtract, type SpecSubOptions } from "../../dsp/src/specsub.ts";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -23,7 +23,7 @@ const { values, positionals } = parseArgs({
 
 if (positionals.length !== 2) {
   console.error(
-    `usage: node src/trace.ts in.wav out-dir [--alpha ${defaults.alpha}] [--beta ${defaults.beta}] [--warmup grow|zeros]`,
+    `usage: node packages/cli/src/trace.ts in.wav out-dir [--alpha ${defaults.alpha}] [--beta ${defaults.beta}] [--warmup grow|zeros]`,
   );
   process.exit(1);
 }
