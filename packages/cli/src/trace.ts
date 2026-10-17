@@ -6,10 +6,10 @@
 //   power.f32 noise.f32 gain.f32   float32, little-endian, [frames][bins] row-major
 //   clean.wav                  the denoised output
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { readWav, writeWav } from "../../dsp/src/wav.ts";
+import { readWav, toMono, writeWav } from "../../dsp/src/wav.ts";
 import { defaults, frameSetup, spectralSubtract, type SpecSubOptions } from "../../dsp/src/specsub.ts";
 
 const { values, positionals } = parseArgs({
@@ -40,7 +40,9 @@ const opts: Pick<SpecSubOptions, "alpha" | "beta" | "warmup"> = {
   warmup,
 };
 
-const { fs, x } = readWav(inPath);
+const wav = readWav(new Uint8Array(readFileSync(inPath)));
+const fs = wav.sampleRate;
+const x = toMono(wav.channels);
 const setup = frameSetup(fs, opts);
 const frames = x.length >= setup.n ? Math.floor((x.length - setup.n) / setup.hop) + 1 : 0;
 
@@ -61,7 +63,7 @@ const save = (name: string, a: Float32Array) => writeFileSync(join(outDir, name)
 save("power.f32", power);
 save("noise.f32", noise);
 save("gain.f32", gain);
-writeWav(join(outDir, "clean.wav"), { fs, x: y });
+writeFileSync(join(outDir, "clean.wav"), writeWav(Float32Array.from(y), fs));
 writeFileSync(
   join(outDir, "meta.json"),
   JSON.stringify({ input: inPath, fs, samples: x.length, frames, ...setup, ...opts }, null, 2) + "\n",

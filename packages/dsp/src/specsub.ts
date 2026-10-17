@@ -47,7 +47,7 @@ export interface FrameTrace {
 }
 
 export function spectralSubtract(
-  x: Float64Array,
+  x: ArrayLike<number>,
   fs: number,
   opts: Partial<SpecSubOptions> = {},
   onFrame?: (frame: FrameTrace) => void,

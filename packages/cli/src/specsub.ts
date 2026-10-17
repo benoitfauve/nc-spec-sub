@@ -1,7 +1,8 @@
 // CLI: node packages/cli/src/specsub.ts in.wav out.wav [--alpha 2] [--beta 0.01]
 
+import { readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { readWav, writeWav } from "../../dsp/src/wav.ts";
+import { readWav, toMono, writeWav } from "../../dsp/src/wav.ts";
 import { defaults, spectralSubtract } from "../../dsp/src/specsub.ts";
 
 const { values, positionals } = parseArgs({
@@ -30,11 +31,13 @@ if (warmup !== "grow" && warmup !== "zeros") {
   process.exit(1);
 }
 
-const { fs, x } = readWav(inPath);
+const wav = readWav(new Uint8Array(readFileSync(inPath)));
+const fs = wav.sampleRate;
+const x = toMono(wav.channels);
 const t0 = performance.now();
 const y = spectralSubtract(x, fs, { alpha, beta, warmup });
 const ms = performance.now() - t0;
-writeWav(outPath, { fs, x: y });
+writeFileSync(outPath, writeWav(Float32Array.from(y), fs));
 
 console.log(
   `${inPath} -> ${outPath}: ${fs} Hz, ${(x.length / fs).toFixed(2)} s, ` +

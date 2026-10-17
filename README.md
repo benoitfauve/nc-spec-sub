@@ -103,7 +103,7 @@ packages/
     specsub.ts   noise estimate and spectral subtraction
     quantile.ts  sliding quantile on a sorted window, per bin
     fft.ts       radix-2 FFT
-    wav.ts       16-bit PCM WAV read and write
+    wav.ts       WAV read and write (PCM 8 to 32-bit, float)
   cli/src/
     specsub.ts   command-line entry point
     trace.ts     runs the algorithm and saves its internals for the notebook
