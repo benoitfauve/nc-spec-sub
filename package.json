@@ -1,14 +1,17 @@
 {
   "name": "nc-spec-sub",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
-  "description": "Noise compensation by running-median noise estimation and spectral subtraction.",
+  "description": "Real-time noise compensation by quantile-based noise estimation and spectral subtraction: web app and CLI.",
   "license": "MIT",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "start": "node packages/cli/src/specsub.ts",
     "demo": "node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav",
-    "typecheck": "tsc -p ."
+    "typecheck": "tsc -p packages/dsp && tsc -p packages/cli"
   },
   "engines": {
     "node": ">=23.6"
