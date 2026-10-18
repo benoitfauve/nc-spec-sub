@@ -11,6 +11,7 @@
   "scripts": {
     "start": "node packages/cli/src/specsub.ts",
     "demo": "node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav",
+    "test": "vitest run",
     "typecheck": "tsc -p packages/dsp && tsc -p packages/cli"
   },
   "engines": {
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.19.1",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
   }
 }
