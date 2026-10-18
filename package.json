@@ -12,7 +12,8 @@
     "start": "node packages/cli/src/specsub.ts",
     "demo": "node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav",
     "test": "vitest run",
-    "typecheck": "tsc -p packages/dsp && tsc -p packages/cli"
+    "typecheck": "tsc -p packages/dsp && tsc -p packages/cli",
+    "ncspec": "node packages/cli/src/main.ts"
   },
   "engines": {
     "node": ">=23.6"

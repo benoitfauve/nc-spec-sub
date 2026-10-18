@@ -2,8 +2,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { readWav, toMono, writeWav } from "../../dsp/src/wav.ts";
-import { defaults, spectralSubtract } from "../../dsp/src/specsub.ts";
+import { readWav, specSubDefaults as defaults, spectralSubtract, toMono, writeWav } from "@ncspec/dsp";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,

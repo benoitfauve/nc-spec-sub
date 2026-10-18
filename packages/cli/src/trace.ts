@@ -9,8 +9,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { readWav, toMono, writeWav } from "../../dsp/src/wav.ts";
-import { defaults, frameSetup, spectralSubtract, type SpecSubOptions } from "../../dsp/src/specsub.ts";
+import { frameSetup, readWav, specSubDefaults as defaults, spectralSubtract, toMono, writeWav, type SpecSubOptions } from "@ncspec/dsp";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,

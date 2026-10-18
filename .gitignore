@@ -10,3 +10,6 @@ tmp/
 
 # OS / editor
 .DS_Store
+
+# written by ncspec gen-synthetic
+testdata/synthetic/
