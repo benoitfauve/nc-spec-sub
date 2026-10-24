@@ -6,14 +6,18 @@
   "license": "MIT",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
+    "dev": "npm run dev -w @ncspec/web",
+    "build": "npm run build -w @ncspec/web",
+    "preview": "npm run preview -w @ncspec/web",
     "start": "node packages/cli/src/specsub.ts",
     "demo": "node packages/cli/src/specsub.ts testdata/2001/throwitaway.noisy.wav out/throwitaway.clean.wav",
+    "ncspec": "node packages/cli/src/main.ts",
     "test": "vitest run",
-    "typecheck": "tsc -p packages/dsp && tsc -p packages/cli",
-    "ncspec": "node packages/cli/src/main.ts"
+    "typecheck": "tsc -p packages/dsp && tsc -p packages/cli && tsc -p apps/web"
   },
   "engines": {
     "node": ">=23.6"

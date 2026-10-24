@@ -13,3 +13,7 @@ tmp/
 
 # written by ncspec gen-synthetic
 testdata/synthetic/
+
+# build output
+dist/
+coverage/
