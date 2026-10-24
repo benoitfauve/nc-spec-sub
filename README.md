@@ -32,11 +32,11 @@ the input sample rate.
 
 ## Example
 
-`testdata/throwitaway.noisy.wav` is "throw it away" spoken in car noise (8 kHz, 2.8 s).
+`testdata/2001/throwitaway.noisy.wav` is "throw it away" spoken in car noise (8 kHz, 2.8 s).
 
 ```bash
 mkdir -p out
-node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav
+node packages/cli/src/specsub.ts testdata/2001/throwitaway.noisy.wav out/throwitaway.clean.wav
 ```
 
 The same thing as an npm script:
@@ -49,7 +49,7 @@ Try a gentler setting (alpha 0.25 gave the best speech recognition results in th
 Eurospeech 2001 study) and compare by ear:
 
 ```bash
-node packages/cli/src/specsub.ts testdata/throwitaway.noisy.wav out/throwitaway.a025.wav --alpha 0.25
+node packages/cli/src/specsub.ts testdata/2001/throwitaway.noisy.wav out/throwitaway.a025.wav --alpha 0.25
 ```
 
 ## How it works
@@ -86,7 +86,7 @@ The plots come from the TypeScript code itself: `packages/cli/src/trace.ts` runs
 only loads and plots them.
 
 ```bash
-node packages/cli/src/trace.ts testdata/throwitaway.noisy.wav out/trace/alpha-2   # what the notebook runs
+node packages/cli/src/trace.ts testdata/2001/throwitaway.noisy.wav out/trace/alpha-2   # what the notebook runs
 ```
 
 To run the notebook you need Node on the `PATH` and a Python environment with numpy,
@@ -107,7 +107,7 @@ packages/
   cli/src/
     specsub.ts   command-line entry point
     trace.ts     runs the algorithm and saves its internals for the notebook
-testdata/      sample recording
+testdata/      2001 recordings and MUSAN noise clips, see testdata/ATTRIBUTION.md
 notebooks/     how-it-works.ipynb
 sliding-median.md   how the sorted-window update works
 ```
@@ -123,6 +123,6 @@ npm run typecheck
 
 Code: MIT, see `LICENSE`.
 
-`testdata/throwitaway.noisy.wav`: recorded in 2001 by Benoît Fauve and the Speech and
+`testdata/2001/throwitaway.noisy.wav`: recorded in 2001 by Benoît Fauve and the Speech and
 Image Group (SIG), University of Wales Swansea. CC BY 4.0
 (https://creativecommons.org/licenses/by/4.0/).
