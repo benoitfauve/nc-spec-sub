@@ -83,7 +83,6 @@ Input can be any PCM (8 to 32-bit) or float WAV; channels are mixed to mono. Out
 `testdata/2001/throwitaway.noisy.wav` is "throw it away" spoken in car noise (8 kHz, 2.8 s).
 
 ```bash
-mkdir -p out
 node packages/cli/src/specsub.ts testdata/2001/throwitaway.noisy.wav out/throwitaway.clean.wav
 ```
 

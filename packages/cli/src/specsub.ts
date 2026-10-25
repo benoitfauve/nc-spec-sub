@@ -1,6 +1,7 @@
 // CLI: node packages/cli/src/specsub.ts in.wav out.wav [--alpha 2] [--beta 0.01]
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { parseArgs } from "node:util";
 import { readWav, specSubDefaults as defaults, spectralSubtract, toMono, writeWav } from "@ncspec/dsp";
 
@@ -36,6 +37,7 @@ const x = toMono(wav.channels);
 const t0 = performance.now();
 const y = spectralSubtract(x, fs, { alpha, beta, warmup });
 const ms = performance.now() - t0;
+mkdirSync(dirname(outPath), { recursive: true });
 writeFileSync(outPath, writeWav(Float32Array.from(y), fs));
 
 console.log(
