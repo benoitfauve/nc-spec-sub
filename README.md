@@ -1,28 +1,76 @@
 # nc-spec-sub
 
-Noise compensation for speech: a running-median noise estimate followed by power
-spectral subtraction. Plain TypeScript, no runtime dependencies.
+Real-time **noise compensation** for speech: quantile-based noise estimation and
+non-linear spectral subtraction (NLSS), followed by two IIR filters. It runs in the
+browser and on the command line, with one TypeScript DSP core.
 
-This is a first, minimal version of a re-creation of a 2001 real-time demo built at the
-Speech and Image Group, University of Wales Swansea, as a side demo for:
+It re-creates a 2001 real-time demo (an MFC / Visual C++ app) built at the Speech and
+Image Group (SIG), University of Wales Swansea, by John Mason (group lead), Nicholas
+Evans (PhD candidate) and Benoît Fauve (Erasmus student from ESPM, now Centrale
+Marseille), as a side demo for:
 
 - N. W. D. Evans, J. S. Mason, *Noise estimation without explicit speech, non-speech
   detection: a comparison of mean, modal and median based approaches*, Eurospeech 2001.
 - N. W. D. Evans, J. S. Mason, B. Fauve, *Efficient real-time noise estimation without
   explicit speech, non-speech detection: an assessment on the AURORA corpus*, DSP 2002.
 
-## Requirements
+The web app has two views over the same engine: a **modern** one, and a faithful **2001**
+Windows-style re-creation of the original dialog.
 
-Node.js 23.6 or later. Node runs the `.ts` sources directly, so there is no build step.
+## Quick start
 
-## Usage
+Requires Node.js 23.6 or later (it runs the TypeScript sources directly). No Python needed.
+
+```bash
+npm install
+npm run dev          # web app on http://localhost:5173 (mic works on localhost)
+npm test             # DSP tests
+npm run typecheck
+npm run build        # static site in apps/web/dist (no server needed)
+```
+
+Command line:
+
+```bash
+npm run ncspec -- --help
+npm run ncspec -- process noisy.wav -o clean.wav --preset paper
+npm run ncspec -- process speech.wav -o out.wav --noise car.wav --snr 5 --clean speech.wav
+npm run ncspec -- design --kind cheby1 --response highpass --cutoff 300 --order 6 --ripple 0.1
+npm run ncspec -- gen-synthetic --out testdata/synthetic
+```
+
+## How it works
+
+```
+input → gain → add noise → NLSS → filter 1 → filter 2 → limiter → output
+                           │
+                           ├─ STFT (32 ms frames; modern: sqrt-Hann, 50% overlap / 2001: blocks)
+                           ├─ running quantile of past spectra per bin (median = noise estimate)
+                           └─ power spectral subtraction: |Y|² = max(|X|² − α·N², β·|X|²)
+```
+
+- **Presets**: `listening` (low musical noise), `paper` (the published set-up: 0.5 s
+  median at a 16 ms rate, α = 0.25), `legacy-2001` (the demo's defaults).
+- **Filters** are designed on the fly (Butterworth, Chebyshev I and II, low or high-pass).
+  The design reproduces all 1,282 non-empty, designable coefficient files of the 2001
+  filter bank exactly.
+- In the browser the engine runs in an AudioWorklet (mic or looped clip, live), and in a
+  Web Worker for faster-than-real-time export. No audio leaves the device.
+
+## Minimal version
+
+`packages/dsp/src/specsub.ts` is the first, minimal version of the algorithm: a
+running-median noise estimate and power spectral subtraction in about 100 lines, kept
+as a readable reference next to the streaming `nlss.ts` used by the web app and `ncspec`.
+
+### Usage
 
 ```bash
 node packages/cli/src/specsub.ts in.wav out.wav [--alpha 2] [--beta 0.01] [--warmup grow]
 ```
 
-Input must be 16-bit PCM WAV; only the first channel is used. Output is 16-bit mono at
-the input sample rate.
+Input can be any PCM (8 to 32-bit) or float WAV; channels are mixed to mono. Output is
+16-bit mono at the input sample rate.
 
 | Option | Default | Meaning |
 |---|---|---|
@@ -30,7 +78,7 @@ the input sample rate.
 | `--beta` | 0.01 | Spectral floor, as a fraction of the noisy power (0.01 is -20 dB). |
 | `--warmup` | grow | How the median window starts. `grow`: median of the frames seen so far. `zeros`: the window starts full of zeros, as in the 2001 demo, so nothing is subtracted until half the window holds real frames. |
 
-## Example
+### Example
 
 `testdata/2001/throwitaway.noisy.wav` is "throw it away" spoken in car noise (8 kHz, 2.8 s).
 
@@ -52,7 +100,7 @@ Eurospeech 2001 study) and compare by ear:
 node packages/cli/src/specsub.ts testdata/2001/throwitaway.noisy.wav out/throwitaway.a025.wav --alpha 0.25
 ```
 
-## How it works
+### How it works
 
 ```
 x → STFT → |X|² ─┬─────────────────────────────┐
@@ -73,7 +121,7 @@ x → STFT → |X|² ─┬─────────────────�
 - **Subtraction**: the gain is applied to the complex spectrum, so the noisy phase is
   kept.
 
-## Notebook
+### Notebook
 
 [notebooks/how-it-works.ipynb](notebooks/how-it-works.ipynb) walks through the
 algorithm step by step on the example recording: noisy spectrogram, the median noise
@@ -97,32 +145,19 @@ listen to the audio. Outputs are stripped on commit by
 
 ## Layout
 
-```
-packages/
-  dsp/src/
-    specsub.ts   noise estimate and spectral subtraction
-    quantile.ts  sliding quantile on a sorted window, per bin
-    fft.ts       radix-2 FFT
-    wav.ts       WAV read and write (PCM 8 to 32-bit, float)
-  cli/src/
-    specsub.ts   command-line entry point
-    trace.ts     runs the algorithm and saves its internals for the notebook
-testdata/      2001 recordings and MUSAN noise clips, see testdata/ATTRIBUTION.md
-notebooks/     how-it-works.ipynb
-sliding-median.md   how the sorted-window update works
-```
+| Path | Content |
+|---|---|
+| `packages/dsp` | DSP core: FFT, quantile estimator, NLSS, filter design, pipeline, WAV I/O, minimal `specsub.ts` (no dependencies) |
+| `packages/cli` | `ncspec` command-line tool (Node); `specsub.ts` and `trace.ts` for the minimal version |
+| `apps/web` | Vite + Preact web app: modern view, 2001 view, AudioWorklet, worker |
+| `testdata` | Test audio: 2001 recordings (CC BY 4.0), MUSAN noise excerpts; synthetic signals are generated, `synthetic/` and `private/` are git-ignored |
+| `notebooks` | `how-it-works.ipynb`, the minimal version step by step |
+| `sliding-median.md` | How the sorted-window median update works |
 
-## Development
+## Licence and credits
 
-```bash
-npm install        # TypeScript and Node types, for type checking only
-npm run typecheck
-```
-
-## Licence
-
-Code: MIT, see `LICENSE`.
-
-`testdata/2001/throwitaway.noisy.wav`: recorded in 2001 by Benoît Fauve and the Speech and
-Image Group (SIG), University of Wales Swansea. CC BY 4.0
-(https://creativecommons.org/licenses/by/4.0/).
+Code: MIT (see `LICENSE`). Audio and logos keep their own licences: see `NOTICE.md`
+and `testdata/ATTRIBUTION.md`. The 2001 recordings are CC BY 4.0 (Benoît Fauve and the
+Speech and Image Group, University of Wales Swansea). The crest and SIG logo in the
+2001 view are not covered by the MIT licence. The 2001 filter bank is used locally only (`testdata/private/`,
+never committed).
