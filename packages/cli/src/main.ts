@@ -241,7 +241,9 @@ function main(): void {
     case "batch": {
       const [inDir, outDir] = args;
       if (!inDir || !outDir) fail("usage: ncspec batch <in-dir> <out-dir>");
-      const files = readdirSync(inDir).filter((f) => extname(f).toLowerCase() === ".wav" && statSync(join(inDir, f)).isFile());
+      const files = readdirSync(inDir).filter(
+        (f) => extname(f).toLowerCase() === ".wav" && statSync(join(inDir, f)).isFile(),
+      );
       if (files.length === 0) fail(`no .wav files in ${inDir}`);
       for (const f of files) processFile(join(inDir, f), join(outDir, f), opts);
       break;

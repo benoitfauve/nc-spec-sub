@@ -1,0 +1,7 @@
+# generated, data, or prose (prettier formats code only)
+package-lock.json
+dist/
+out/
+testdata/
+notebooks/
+*.md

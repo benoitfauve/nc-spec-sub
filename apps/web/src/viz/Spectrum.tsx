@@ -19,7 +19,8 @@ export function Spectrum({ engine }: { engine: Engine }) {
       const bins = s.inSpectrum.length;
       // light temporal smoothing for readability
       let sm = smoothed.current;
-      if (!sm || sm.in.length !== bins) sm = smoothed.current = { in: s.inSpectrum.slice(), out: s.outSpectrum.slice() };
+      if (!sm || sm.in.length !== bins)
+        sm = smoothed.current = { in: s.inSpectrum.slice(), out: s.outSpectrum.slice() };
       for (let k = 0; k < bins; k++) {
         sm.in[k] = 0.6 * sm.in[k] + 0.4 * s.inSpectrum[k];
         sm.out[k] = 0.6 * sm.out[k] + 0.4 * s.outSpectrum[k];

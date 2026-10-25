@@ -59,7 +59,7 @@ describe("SlidingQuantile", () => {
     const q = new SlidingQuantile(bins, cap);
     const frames: number[][] = [];
     let seed = 1;
-    const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     const out = new Float32Array(bins);
     for (let f = 0; f < 40; f++) {
       // include ties on purpose

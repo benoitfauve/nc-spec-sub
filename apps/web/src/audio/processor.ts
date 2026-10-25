@@ -1,3 +1,4 @@
+// oxlint-disable-next-line typescript/triple-slash-reference -- AudioWorkletGlobalScope globals, not a module
 /// <reference path="./worklet-globals.d.ts" />
 /**
  * AudioWorklet processor: runs the shared DSP Pipeline on 128-frame quanta.

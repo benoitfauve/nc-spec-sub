@@ -38,14 +38,33 @@ export interface PipelineConfig {
 export type PresetName = "listening" | "paper" | "legacy-2001";
 
 const legacyFilters = (): [FilterStageConfig, FilterStageConfig] => [
-  { enabled: false, kind: "cheby1", response: "highpass", cutoffHz: 600, order: 2, rippleDb: 0.1, stopbandDb: 40, attenuationDb: 3 },
-  { enabled: false, kind: "cheby1", response: "highpass", cutoffHz: 300, order: 6, rippleDb: 0.1, stopbandDb: 40, attenuationDb: 3 },
+  {
+    enabled: false,
+    kind: "cheby1",
+    response: "highpass",
+    cutoffHz: 600,
+    order: 2,
+    rippleDb: 0.1,
+    stopbandDb: 40,
+    attenuationDb: 3,
+  },
+  {
+    enabled: false,
+    kind: "cheby1",
+    response: "highpass",
+    cutoffHz: 300,
+    order: 6,
+    rippleDb: 0.1,
+    stopbandDb: 40,
+    attenuationDb: 3,
+  },
 ];
 
 export const presets: Record<PresetName, { label: string; description: string; config: PipelineConfig }> = {
   listening: {
     label: "Listening",
-    description: "Tapered windows with 50% overlap-add, over-subtraction and a spectral floor tuned for low musical noise.",
+    description:
+      "Tapered windows with 50% overlap-add, over-subtraction and a spectral floor tuned for low musical noise.",
     config: {
       bypass: false,
       gain: 1,
@@ -69,7 +88,8 @@ export const presets: Record<PresetName, { label: string; description: string; c
   },
   paper: {
     label: "Paper (Eurospeech 2001 / DSP 2002)",
-    description: "0.5 s median estimate at a 16 ms rate, noise scalar 0.25, no floor, smoothed estimate and median-filtered spectrum: the ASR-optimal set-up.",
+    description:
+      "0.5 s median estimate at a 16 ms rate, noise scalar 0.25, no floor, smoothed estimate and median-filtered spectrum: the ASR-optimal set-up.",
     config: {
       bypass: false,
       gain: 1,
@@ -93,7 +113,8 @@ export const presets: Record<PresetName, { label: string; description: string; c
   },
   "legacy-2001": {
     label: "2001 demo defaults",
-    description: "The state of the 2001 dialog at start-up: rectangular 32 ms blocks, 1 s interval, 50% shift, alpha 1, no floor.",
+    description:
+      "The state of the 2001 dialog at start-up: rectangular 32 ms blocks, 1 s interval, 50% shift, alpha 1, no floor.",
     config: {
       bypass: false,
       gain: 1,

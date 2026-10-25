@@ -8,7 +8,8 @@ export interface OfflineRequest {
   config: PipelineConfig;
 }
 
-export type OfflineResponse = { type: "progress"; fraction: number } | { type: "done"; output: Float32Array; clipped: number };
+export type OfflineResponse =
+  { type: "progress"; fraction: number } | { type: "done"; output: Float32Array; clipped: number };
 
 self.onmessage = (e: MessageEvent<OfflineRequest>) => {
   const { input, noise, sampleRate, config } = e.data;
@@ -25,5 +26,8 @@ self.onmessage = (e: MessageEvent<OfflineRequest>) => {
     }
   });
   const output = all.slice(lat);
-  (self as unknown as Worker).postMessage({ type: "done", output, clipped: pipeline.clipped } satisfies OfflineResponse, [output.buffer]);
+  (self as unknown as Worker).postMessage(
+    { type: "done", output, clipped: pipeline.clipped } satisfies OfflineResponse,
+    [output.buffer],
+  );
 };

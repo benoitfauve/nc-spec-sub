@@ -38,7 +38,13 @@ export function Slider(props: {
 export function Switch(props: { label: string; checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
   return (
     <label class={`switch${props.disabled ? " disabled" : ""}`}>
-      <input type="checkbox" role="switch" checked={props.checked} disabled={props.disabled} onChange={(e) => props.onChange((e.target as HTMLInputElement).checked)} />
+      <input
+        type="checkbox"
+        role="switch"
+        checked={props.checked}
+        disabled={props.disabled}
+        onChange={(e) => props.onChange((e.target as HTMLInputElement).checked)}
+      />
       <span class="track" aria-hidden="true">
         <span class="thumb" />
       </span>
@@ -67,7 +73,12 @@ export function Select<T extends string | number>(props: {
       <label for={id} class="field-label">
         {props.label}
       </label>
-      <select id={id} value={String(props.value)} disabled={props.disabled} onChange={(e) => props.onChange(parse((e.target as HTMLSelectElement).value))}>
+      <select
+        id={id}
+        value={String(props.value)}
+        disabled={props.disabled}
+        onChange={(e) => props.onChange(parse((e.target as HTMLSelectElement).value))}
+      >
         {[...groups.entries()].map(([g, opts]) =>
           g ? (
             <optgroup label={g} key={g}>
@@ -90,13 +101,24 @@ export function Select<T extends string | number>(props: {
   );
 }
 
-export function Segmented<T extends string>(props: { label: string; value: T; options: { value: T; label: string }[]; onChange: (v: T) => void }) {
+export function Segmented<T extends string>(props: {
+  label: string;
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
   return (
     <div class="field">
       <span class="field-label">{props.label}</span>
       <div class="seg" role="radiogroup" aria-label={props.label}>
         {props.options.map((o) => (
-          <button key={o.value} role="radio" aria-checked={props.value === o.value} class={props.value === o.value ? "on" : ""} onClick={() => props.onChange(o.value)}>
+          <button
+            key={o.value}
+            role="radio"
+            aria-checked={props.value === o.value}
+            class={props.value === o.value ? "on" : ""}
+            onClick={() => props.onChange(o.value)}
+          >
             {o.label}
           </button>
         ))}
@@ -105,14 +127,23 @@ export function Segmented<T extends string>(props: { label: string; value: T; op
   );
 }
 
-export function Card(props: { title: string; enabled?: boolean; onToggle?: (v: boolean) => void; badge?: ComponentChildren; children: ComponentChildren; id?: string }) {
+export function Card(props: {
+  title: string;
+  enabled?: boolean;
+  onToggle?: (v: boolean) => void;
+  badge?: ComponentChildren;
+  children: ComponentChildren;
+  id?: string;
+}) {
   const off = props.enabled === false;
   return (
     <section class={`card${off ? " off" : ""}`} id={props.id}>
       <header class="card-head">
         <h2>{props.title}</h2>
         {props.badge}
-        {props.onToggle && <Switch label={props.enabled ? "On" : "Off"} checked={!!props.enabled} onChange={props.onToggle} />}
+        {props.onToggle && (
+          <Switch label={props.enabled ? "On" : "Off"} checked={!!props.enabled} onChange={props.onToggle} />
+        )}
       </header>
       <div class="card-body">{props.children}</div>
     </section>
@@ -131,13 +162,21 @@ export function SteppedSlider<T extends number>(props: {
 }) {
   const id = useId();
   const last = props.steps.length - 1;
-  const index = Math.max(0, props.steps.findIndex((s) => s.value === props.value));
+  const index = Math.max(
+    0,
+    props.steps.findIndex((s) => s.value === props.value),
+  );
   // stop centres line up with the thumb centre at each end of the track
   const left = (i: number) => `calc(var(--thumb) / 2 + (100% - var(--thumb)) * ${i / last})`;
   const labels = (key: "above" | "below") => (
     <div class="stepped-labels" aria-hidden="true">
       {props.steps.map((s, i) => (
-        <span key={i} style={{ left: left(i) }} class={i === index ? "on" : ""} onClick={() => !props.disabled && props.onInput(s.value)}>
+        <span
+          key={i}
+          style={{ left: left(i) }}
+          class={i === index ? "on" : ""}
+          onClick={() => !props.disabled && props.onInput(s.value)}
+        >
           {s[key]}
         </span>
       ))}

@@ -47,9 +47,22 @@ export function Sunken({ at, children }: { at: Rect; children: ComponentChildren
   );
 }
 
-export function Button(props: { at: Rect; children: ComponentChildren; onClick: () => void; isDefault?: boolean; disabled?: boolean; title?: string }) {
+export function Button(props: {
+  at: Rect;
+  children: ComponentChildren;
+  onClick: () => void;
+  isDefault?: boolean;
+  disabled?: boolean;
+  title?: string;
+}) {
   return (
-    <button class={`w-button${props.isDefault ? " default" : ""}`} style={pos(props.at)} onClick={props.onClick} disabled={props.disabled} title={props.title}>
+    <button
+      class={`w-button${props.isDefault ? " default" : ""}`}
+      style={pos(props.at)}
+      onClick={props.onClick}
+      disabled={props.disabled}
+      title={props.title}
+    >
       <span>{props.children}</span>
     </button>
   );
@@ -58,7 +71,11 @@ export function Button(props: { at: Rect; children: ComponentChildren; onClick: 
 export function Check(props: { at: Rect; label: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <label class="w-check" style={pos(props.at)}>
-      <input type="checkbox" checked={props.checked} onChange={(e) => props.onChange((e.target as HTMLInputElement).checked)} />
+      <input
+        type="checkbox"
+        checked={props.checked}
+        onChange={(e) => props.onChange((e.target as HTMLInputElement).checked)}
+      />
       <i aria-hidden="true" />
       <span>{props.label}</span>
     </label>
@@ -80,7 +97,11 @@ export function Combo<T extends string | number>(props: {
       <span class="w-combo-arrow" aria-hidden="true">
         <i />
       </span>
-      <select aria-label={props.label} value={String(props.value)} onChange={(e) => props.onChange(parse((e.target as HTMLSelectElement).value))}>
+      <select
+        aria-label={props.label}
+        value={String(props.value)}
+        onChange={(e) => props.onChange(parse((e.target as HTMLSelectElement).value))}
+      >
         {props.options.map((o) => (
           <option key={String(o.value)} value={String(o.value)}>
             {o.label}
@@ -92,7 +113,16 @@ export function Combo<T extends string | number>(props: {
 }
 
 /** Horizontal Win32 scrollbar used as a slider, like the 2001 dialog (arrows step, track pages, thumb drags). */
-export function ScrollBar(props: { at: Rect; value: number; min: number; max: number; step: number; page?: number; onChange: (v: number) => void; label: string }) {
+export function ScrollBar(props: {
+  at: Rect;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  page?: number;
+  onChange: (v: number) => void;
+  label: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { min, max, step } = props;
   const page = props.page ?? step * 5;
@@ -156,13 +186,29 @@ export function ScrollBar(props: { at: Rect; value: number; min: number; max: nu
       aria-valuenow={props.value}
       onKeyDown={onKey}
     >
-      <button class="w-arrow" style={{ width: `${h}px` }} tabIndex={-1} aria-label="decrease" onClick={() => set(props.value - step)}>
+      <button
+        class="w-arrow"
+        style={{ width: `${h}px` }}
+        tabIndex={-1}
+        aria-label="decrease"
+        onClick={() => set(props.value - step)}
+      >
         <i class="left" />
       </button>
       <div class="w-track" onPointerDown={onTrack}>
-        <div class="w-thumb" style={{ width: `${thumb}px`, left: `${frac * (track - thumb)}px` }} onPointerDown={onThumb} />
+        <div
+          class="w-thumb"
+          style={{ width: `${thumb}px`, left: `${frac * (track - thumb)}px` }}
+          onPointerDown={onThumb}
+        />
       </div>
-      <button class="w-arrow" style={{ width: `${h}px` }} tabIndex={-1} aria-label="increase" onClick={() => set(props.value + step)}>
+      <button
+        class="w-arrow"
+        style={{ width: `${h}px` }}
+        tabIndex={-1}
+        aria-label="increase"
+        onClick={() => set(props.value + step)}
+      >
         <i class="right" />
       </button>
     </div>

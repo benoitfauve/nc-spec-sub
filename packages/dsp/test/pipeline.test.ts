@@ -31,7 +31,10 @@ function rms(x: Float32Array, from = 0, to = x.length): number {
 describe("NLSS", () => {
   for (const [name, framing] of framings) {
     it(`${name}: with alpha = 0 it is a pure delay of one frame`, () => {
-      const nlss = new Nlss(8000, params({ ...framing, alpha: 0, beta: 0, smoothEstimate: false, medianFilter: false }));
+      const nlss = new Nlss(
+        8000,
+        params({ ...framing, alpha: 0, beta: 0, smoothEstimate: false, medianFilter: false }),
+      );
       expect(nlss.frameSize).toBe(256);
       const x = generateSynthetic("pink", 8000, 0.5, 11);
       const y = runNlss(nlss, x, 100);
@@ -119,7 +122,9 @@ describe("Pipeline", () => {
   });
 
   it("invalid filter specs are reported and bypassed", () => {
-    const cfg = mergeConfig(presetConfig("legacy-2001"), { filters: [{ enabled: true, cutoffHz: 0 }, { enabled: true }] });
+    const cfg = mergeConfig(presetConfig("legacy-2001"), {
+      filters: [{ enabled: true, cutoffHz: 0 }, { enabled: true }],
+    });
     const p = new Pipeline(8000, cfg);
     expect(p.getFilterStatus()).toEqual(["invalid", "ok"]);
   });

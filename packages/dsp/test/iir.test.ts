@@ -48,8 +48,12 @@ describe("filter design: analytic checks", () => {
   });
 
   it("rejects cutoffs outside (0, Nyquist)", () => {
-    expect(() => designFilter({ kind: "butter", response: "lowpass", cutoffHz: 0, order: 2 }, fs)).toThrow(FilterDesignError);
-    expect(() => designFilter({ kind: "butter", response: "lowpass", cutoffHz: 4000, order: 2 }, fs)).toThrow(FilterDesignError);
+    expect(() => designFilter({ kind: "butter", response: "lowpass", cutoffHz: 0, order: 2 }, fs)).toThrow(
+      FilterDesignError,
+    );
+    expect(() => designFilter({ kind: "butter", response: "lowpass", cutoffHz: 4000, order: 2 }, fs)).toThrow(
+      FilterDesignError,
+    );
   });
 });
 

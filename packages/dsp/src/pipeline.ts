@@ -1,5 +1,12 @@
 import { BiquadCascade } from "./biquad.ts";
-import { clampConfig, cloneConfig, defaultConfig, filterSpec, type FilterStageConfig, type PipelineConfig } from "./config.ts";
+import {
+  clampConfig,
+  cloneConfig,
+  defaultConfig,
+  filterSpec,
+  type FilterStageConfig,
+  type PipelineConfig,
+} from "./config.ts";
 import { designFilter, FilterDesignError, type Biquad } from "./iir-design.ts";
 import { SpectrumMonitor } from "./monitor.ts";
 import { Nlss, nlssNeedsRebuild } from "./nlss.ts";

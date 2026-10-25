@@ -13,7 +13,7 @@ describe("Float32 median window", () => {
     const out = new Float32Array(bins);
     const frames: Float64Array[] = [];
     let seed = 3;
-    const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     for (let f = 0; f < 200; f++) {
       // power-like values over a wide dynamic range, many close to each other
       const frame = Float64Array.from({ length: bins }, () => 10 ** (-8 * rand()) * (1 + 1e-7 * rand()));

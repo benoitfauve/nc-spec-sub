@@ -45,11 +45,7 @@ export class FFT {
     }
   }
 
-  private transform(
-    re: Float32Array | Float64Array,
-    im: Float32Array | Float64Array,
-    sign: number,
-  ): void {
+  private transform(re: Float32Array | Float64Array, im: Float32Array | Float64Array, sign: number): void {
     const n = this.size;
     for (let i = 0; i < n; i++) {
       const j = this.rev[i];

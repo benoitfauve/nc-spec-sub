@@ -167,7 +167,11 @@ export class Engine {
       return;
     }
     const buf = userFile
-      ? await this.decode(`${id}:${userFile.size}:${userFile.lastModified}`, () => userFile.arrayBuffer(), this.ctx.sampleRate)
+      ? await this.decode(
+          `${id}:${userFile.size}:${userFile.lastModified}`,
+          () => userFile.arrayBuffer(),
+          this.ctx.sampleRate,
+        )
       : await this.decode(`clip:${id}`, this.clipData(id), this.ctx.sampleRate);
     this.noiseBuffer = buf;
     const copy = buf.slice();
@@ -214,7 +218,11 @@ export class Engine {
       const samples =
         source.type === "clip"
           ? await this.decode(`clip:${source.id}`, this.clipData(source.id), rate)
-          : await this.decode(`file:${source.file.name}:${source.file.size}:${source.file.lastModified}`, () => source.file.arrayBuffer(), rate);
+          : await this.decode(
+              `file:${source.file.name}:${source.file.size}:${source.file.lastModified}`,
+              () => source.file.arrayBuffer(),
+              rate,
+            );
       const name = source.type === "clip" ? source.id.split("/").pop()! : source.file.name.replace(/\.[^.]+$/, "");
       this.currentInput = { name, samples };
       const buffer = ctx.createBuffer(1, samples.length, ctx.sampleRate);

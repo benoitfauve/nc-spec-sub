@@ -9,7 +9,15 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { frameSetup, readWav, specSubDefaults as defaults, spectralSubtract, toMono, writeWav, type SpecSubOptions } from "@ncspec/dsp";
+import {
+  frameSetup,
+  readWav,
+  specSubDefaults as defaults,
+  spectralSubtract,
+  toMono,
+  writeWav,
+  type SpecSubOptions,
+} from "@ncspec/dsp";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -68,4 +76,6 @@ writeFileSync(
   JSON.stringify({ input: inPath, fs, samples: x.length, frames, ...setup, ...opts }, null, 2) + "\n",
 );
 
-console.log(`${inPath} -> ${outDir}: ${frames} frames x ${setup.bins} bins, alpha=${opts.alpha}, beta=${opts.beta}, warmup=${warmup}`);
+console.log(
+  `${inPath} -> ${outDir}: ${frames} frames x ${setup.bins} bins, alpha=${opts.alpha}, beta=${opts.beta}, warmup=${warmup}`,
+);

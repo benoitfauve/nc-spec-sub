@@ -6,7 +6,13 @@ const DB_MIN = -80;
 const DB_MAX = 10;
 
 /** Magnitude response of filter 1, filter 2 and their cascade. */
-export function FilterResponse({ filters, sampleRate }: { filters: [FilterStageConfig, FilterStageConfig]; sampleRate: number }) {
+export function FilterResponse({
+  filters,
+  sampleRate,
+}: {
+  filters: [FilterStageConfig, FilterStageConfig];
+  sampleRate: number;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

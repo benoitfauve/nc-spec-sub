@@ -58,7 +58,11 @@ export function readWav(bytes: Uint8Array): WavData {
 }
 
 /** Writes mono or multichannel audio. 16-bit PCM (default) or 32-bit float. */
-export function writeWav(channels: Float32Array[] | Float32Array, sampleRate: number, encoding: "pcm16" | "float32" = "pcm16"): Uint8Array {
+export function writeWav(
+  channels: Float32Array[] | Float32Array,
+  sampleRate: number,
+  encoding: "pcm16" | "float32" = "pcm16",
+): Uint8Array {
   const chans = Array.isArray(channels) ? channels : [channels];
   const numChannels = chans.length;
   const frames = chans[0]?.length ?? 0;

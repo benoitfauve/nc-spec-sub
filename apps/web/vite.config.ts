@@ -64,7 +64,14 @@ const sources: ClipSource[] = [
     group: "Synthetic (CC0)",
     synth: synthNames,
     prefix: "synthetic",
-    label: (n) => ({ white: "White noise", pink: "Pink noise", a440: "A440 tone", sweep: "Log sweep", pulses: "Speech-like bursts" })[n] ?? n,
+    label: (n) =>
+      ({
+        white: "White noise",
+        pink: "Pink noise",
+        a440: "A440 tone",
+        sweep: "Log sweep",
+        pulses: "Speech-like bursts",
+      })[n] ?? n,
     kind: (n) => (n === "white" || n === "pink" ? "noise" : "test"),
   },
 ];
@@ -85,7 +92,14 @@ function scanClips() {
     }
     for (const { name, data } of entries) {
       const url = `audio/${s.prefix}/${name}.wav`;
-      clips.push({ id: `${s.prefix}/${name}`, label: s.label(name), group: s.group, kind: s.kind(name), url, private: !!s.private });
+      clips.push({
+        id: `${s.prefix}/${name}`,
+        label: s.label(name),
+        group: s.group,
+        kind: s.kind(name),
+        url,
+        private: !!s.private,
+      });
       files.push({ url, data });
     }
   }
@@ -143,7 +157,9 @@ function workletProcessor(): Plugin {
     },
     load(id) {
       if (id !== "\0" + VIRTUAL) return null;
-      return isDev ? `export default ${JSON.stringify(DEV_PATH)};` : `export { default } from ${JSON.stringify(entry + "?worker&url")};`;
+      return isDev
+        ? `export default ${JSON.stringify(DEV_PATH)};`
+        : `export { default } from ${JSON.stringify(entry + "?worker&url")};`;
     },
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {

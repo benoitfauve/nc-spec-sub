@@ -151,7 +151,11 @@ export function useController() {
     if (opts.file) setFile(opts.file);
     if (running) {
       const src: Source =
-        kind === "mic" ? { type: "mic" } : kind === "file" && (opts.file ?? file) ? { type: "file", file: (opts.file ?? file)! } : { type: "clip", id: opts.clipId ?? clipId };
+        kind === "mic"
+          ? { type: "mic" }
+          : kind === "file" && (opts.file ?? file)
+            ? { type: "file", file: (opts.file ?? file)! }
+            : { type: "clip", id: opts.clipId ?? clipId };
       run(async () => {
         await engine.start(src, rate);
         setRunning(true);
@@ -191,7 +195,8 @@ export function useController() {
   const exportProcessed = () =>
     run(async () => {
       if (!engine.currentInput) {
-        if (sourceKind === "mic") throw new Error("Offline export works on a clip or a file. Use Record for the microphone.");
+        if (sourceKind === "mic")
+          throw new Error("Offline export works on a clip or a file. Use Record for the microphone.");
         await engine.start(currentSource(), rate);
         engine.setConfig(configRef.current);
         engine.setMonitor(monitorOn, monitorVolume);

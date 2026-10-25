@@ -154,6 +154,18 @@ listen to the audio. Outputs are stripped on commit by
 | `notebooks` | `how-it-works.ipynb`, the minimal version step by step |
 | `sliding-median.md` | How the sorted-window median update works |
 
+## Development
+
+```bash
+npm run typecheck
+npm run lint         # oxlint
+npm run format       # prettier
+npm test
+```
+
+The same four checks run before each commit through [pre-commit](https://pre-commit.com/)
+(`.pre-commit-config.yaml`). After cloning: `pip install pre-commit && pre-commit install`.
+
 ## Licence and credits
 
 Code: MIT (see `LICENSE`). Audio and logos keep their own licences: see `NOTICE.md`
