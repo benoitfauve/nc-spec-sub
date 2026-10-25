@@ -149,7 +149,7 @@ listen to the audio. Outputs are stripped on commit by
 | `packages/dsp` | DSP core: FFT, quantile estimator, NLSS, filter design, pipeline, WAV I/O, minimal `specsub.ts` (no dependencies) |
 | `packages/cli` | `ncspec` command-line tool (Node); `specsub.ts` and `trace.ts` for the minimal version |
 | `apps/web` | Vite + Preact web app: modern view, 2001 view, AudioWorklet, worker |
-| `testdata` | Test audio: 2001 recordings (CC BY 4.0), MUSAN noise excerpts; synthetic signals are generated, `synthetic/` and `private/` are git-ignored |
+| `testdata` | Test audio: 2001 recordings (CC BY 4.0), MUSAN noise excerpts, one LibriSpeech clean utterance (CC BY 4.0); synthetic signals are generated, `synthetic/` and `private/` are git-ignored |
 | `notebooks` | `how-it-works.ipynb`, the minimal version step by step |
 | `sliding-median.md` | How the sorted-window median update works |
 

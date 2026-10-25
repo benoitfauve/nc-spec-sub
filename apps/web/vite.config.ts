@@ -54,6 +54,13 @@ const sources: ClipSource[] = [
     kind: (n) => (/mph|^70$|carnoise|whitenoise/.test(n) ? "noise" : n === "A440" ? "test" : "speech"),
   },
   {
+    group: "LibriSpeech clean speech (CC BY 4.0, see Credits)",
+    dir: join(root, "testdata/librispeech"),
+    prefix: "librispeech",
+    label: (n) => `LibriSpeech ${n.replace(/\.clean$/, "")} (clean speech)`,
+    kind: () => "speech",
+  },
+  {
     group: "MUSAN noise (CC BY 4.0, see Credits)",
     dir: join(root, "testdata/noise-musan"),
     prefix: "musan",

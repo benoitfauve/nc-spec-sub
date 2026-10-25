@@ -20,6 +20,15 @@ export function Credits() {
         </i>
         , DSP 2002.
       </p>
+      <h3>Speech sample</h3>
+      <p>
+        Clean speech from LibriSpeech (V. Panayotov, G. Chen, D. Povey, S. Khudanpur, 2015,{" "}
+        <a href="https://www.openslr.org/12" target="_blank" rel="noreferrer">
+          CC BY 4.0
+        </a>
+        ), utterance 1462-170138-0024 (Willa Cather, Alexander's Bridge). Modified: telephone band, gain, leading
+        silence.
+      </p>
       <h3>Noise samples</h3>
       <p>
         From the MUSAN corpus (D. Snyder, G. Chen, D. Povey, 2015,{" "}
