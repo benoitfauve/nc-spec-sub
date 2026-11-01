@@ -1,0 +1,13 @@
+{
+  "name": "@ncspec/cli",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "ncspec": "./src/main.ts"
+  },
+  "dependencies": {
+    "@ncspec/dsp": "0.1.0"
+  }
+}

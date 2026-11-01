@@ -10,3 +10,16 @@ tmp/
 
 # OS / editor
 .DS_Store
+
+# written by ncspec gen-synthetic
+testdata/synthetic/
+
+# build output
+dist/
+coverage/
+
+# 2001 filter bank and anything else that must never be published
+testdata/private/
+
+# reference papers
+*.pdf

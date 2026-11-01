@@ -1,20 +1,34 @@
 {
   "name": "nc-spec-sub",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
-  "description": "Noise compensation by running-median noise estimation and spectral subtraction.",
+  "description": "Real-time noise compensation by quantile-based noise estimation and spectral subtraction: web app and CLI.",
   "license": "MIT",
   "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
-    "start": "node src/main.ts",
-    "demo": "node src/main.ts testdata/throwitaway.noisy.wav out/throwitaway.clean.wav",
-    "typecheck": "tsc -p ."
+    "dev": "npm run dev -w @ncspec/web",
+    "build": "npm run build -w @ncspec/web",
+    "preview": "npm run preview -w @ncspec/web",
+    "start": "node packages/cli/src/specsub.ts",
+    "demo": "node packages/cli/src/specsub.ts testdata/2001/throwitaway.noisy.wav out/throwitaway.clean.wav",
+    "ncspec": "node packages/cli/src/main.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p packages/dsp && tsc -p packages/cli && tsc -p apps/web",
+    "lint": "oxlint --deny-warnings packages apps/web",
+    "format": "prettier --write ."
   },
   "engines": {
     "node": ">=23.6"
   },
   "devDependencies": {
     "@types/node": "^24.19.1",
-    "typescript": "^7.0.2"
+    "oxlint": "^1.90.0",
+    "prettier": "^3.9.10",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
   }
 }

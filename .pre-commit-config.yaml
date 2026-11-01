@@ -1,0 +1,26 @@
+repos:
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: npx --no-install prettier --write
+        language: system
+        files: \.(ts|tsx|css|html|json)$
+        exclude: package-lock\.json$
+      - id: oxlint
+        name: oxlint
+        entry: npx --no-install oxlint --deny-warnings
+        language: system
+        files: \.(ts|tsx)$
+      - id: typecheck
+        name: tsc
+        entry: npm run -s typecheck
+        language: system
+        files: \.(ts|tsx)$
+        pass_filenames: false
+      - id: test
+        name: vitest
+        entry: npm test --silent
+        language: system
+        files: \.(ts|tsx)$
+        pass_filenames: false

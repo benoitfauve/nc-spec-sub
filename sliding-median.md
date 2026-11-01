@@ -2,7 +2,7 @@
 
 The noise estimate is, for every frequency bin, the median of that bin's power over
 the last 0.5 s (31 frames at 8 kHz). Every 16 ms one frame enters the window and the
-oldest one leaves. This note explains how `SlidingQuantile` (`src/quantile.ts`) keeps
+oldest one leaves. This note explains how `SlidingQuantile` (`packages/dsp/src/quantile.ts`) keeps
 that median up to date without sorting the window again on each frame.
 
 ## The problem
@@ -165,7 +165,11 @@ would win, but that is not the case here.
 
 This is the "efficient" update from Evans, Mason and Fauve, *Efficient real-time noise
 estimation without explicit speech, non-speech detection*, DSP 2002, also used in the
-2001 real-time demo. The draft stores power in double precision
-(`Float64Array`); the full project stores magnitudes as `Float32Array` to halve the
-memory. The median gives the same result either way, because squaring does not change
-the order of non-negative values.
+2001 real-time demo. The window is stored as `Float32Array`, half the memory of
+`Float64Array`, and the format the browser's audio worklet works in. On
+`throwitaway.noisy.wav` (alpha 0.25, 1 and 2, both warm-up modes) the single-precision
+median is, in every bin and frame, the double-precision median rounded to single
+precision: the sort order never changes. The denoised output then differs by at most
+1 LSB on a handful of 16-bit samples. The full project stores magnitudes rather than
+power; the median is the same either way, because squaring does not change the order
+of non-negative values.

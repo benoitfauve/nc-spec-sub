@@ -1,7 +1,7 @@
 // Spectral subtraction with a running-median noise estimate
 // (no explicit speech / non-speech detection, after Evans & Mason, Eurospeech 2001).
 
-import { fft } from "./fft.ts";
+import { FFT } from "./fft.ts";
 import { SlidingQuantile } from "./quantile.ts";
 
 export interface SpecSubOptions {
@@ -42,12 +42,12 @@ export function frameSetup(fs: number, opts: Partial<SpecSubOptions> = {}): Fram
 export interface FrameTrace {
   start: number; // first input sample of the frame
   power: Float64Array; // noisy power |X|^2
-  noise: Float64Array; // noise estimate N (running median of power)
+  noise: Float32Array; // noise estimate N (running median of power)
   gain: Float64Array; // amplitude gain applied to X
 }
 
 export function spectralSubtract(
-  x: Float64Array,
+  x: ArrayLike<number>,
   fs: number,
   opts: Partial<SpecSubOptions> = {},
   onFrame?: (frame: FrameTrace) => void,
@@ -65,8 +65,9 @@ export function spectralSubtract(
     for (let i = 0; i < histLen; i++) history.push(silence);
   }
   const power = new Float64Array(bins);
-  const noise = new Float64Array(bins);
+  const noise = new Float32Array(bins);
   const gain = new Float64Array(bins);
+  const fft = new FFT(n);
   const re = new Float64Array(n);
   const im = new Float64Array(n);
   const y = new Float64Array(x.length + n);
@@ -76,7 +77,7 @@ export function spectralSubtract(
       re[i] = x[start + i] * win[i];
       im[i] = 0;
     }
-    fft(re, im);
+    fft.forward(re, im);
 
     for (let k = 0; k < bins; k++) power[k] = re[k] * re[k] + im[k] * im[k];
 
@@ -100,7 +101,7 @@ export function spectralSubtract(
 
     onFrame?.({ start, power, noise, gain });
 
-    fft(re, im, true);
+    fft.inverse(re, im);
     for (let i = 0; i < n; i++) y[start + i] += re[i] * win[i];
   }
 

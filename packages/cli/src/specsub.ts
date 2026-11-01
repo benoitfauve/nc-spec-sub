@@ -1,8 +1,9 @@
-// CLI: node src/main.ts in.wav out.wav [--alpha 2] [--beta 0.01]
+// CLI: node packages/cli/src/specsub.ts in.wav out.wav [--alpha 2] [--beta 0.01]
 
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { parseArgs } from "node:util";
-import { readWav, writeWav } from "./wav.ts";
-import { defaults, spectralSubtract } from "./specsub.ts";
+import { readWav, specSubDefaults as defaults, spectralSubtract, toMono, writeWav } from "@ncspec/dsp";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -16,7 +17,7 @@ const { values, positionals } = parseArgs({
 
 if (values.help || positionals.length !== 2) {
   console.log(
-    `usage: node src/main.ts in.wav out.wav [--alpha ${defaults.alpha}] [--beta ${defaults.beta}] [--warmup grow|zeros]`,
+    `usage: node packages/cli/src/specsub.ts in.wav out.wav [--alpha ${defaults.alpha}] [--beta ${defaults.beta}] [--warmup grow|zeros]`,
   );
   process.exit(values.help ? 0 : 1);
 }
@@ -30,11 +31,14 @@ if (warmup !== "grow" && warmup !== "zeros") {
   process.exit(1);
 }
 
-const { fs, x } = readWav(inPath);
+const wav = readWav(new Uint8Array(readFileSync(inPath)));
+const fs = wav.sampleRate;
+const x = toMono(wav.channels);
 const t0 = performance.now();
 const y = spectralSubtract(x, fs, { alpha, beta, warmup });
 const ms = performance.now() - t0;
-writeWav(outPath, { fs, x: y });
+mkdirSync(dirname(outPath), { recursive: true });
+writeFileSync(outPath, writeWav(Float32Array.from(y), fs));
 
 console.log(
   `${inPath} -> ${outPath}: ${fs} Hz, ${(x.length / fs).toFixed(2)} s, ` +

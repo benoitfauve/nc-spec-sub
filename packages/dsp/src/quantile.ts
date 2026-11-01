@@ -1,16 +1,18 @@
-// Running quantile over the last `capacity` frames, independently for each bin.
-//
-// Every bin keeps its window sorted, so a new frame costs one removal and one
-// insertion per bin instead of a full sort (the "efficient" update of Evans, Mason,
-// Fauve, DSP 2002). See sliding-median.md. Compare with LeetCode 480 "Sliding Window Median".
-//
-// Memory is allocated once; push() and query() never allocate.
-
+/**
+ * Running quantile over the last `capacity` spectra, independently for each bin.
+ *
+ * This is the "efficient" update of quantile-based noise estimation (Evans, Mason,
+ * Fauve, DSP 2002), also used in the 2001 demo: every bin keeps its window sorted, so
+ * a new frame costs one removal and one insertion per bin instead of a full sort.
+ * See sliding-median.md. Compare with LeetCode 480 "Sliding Window Median".
+ *
+ * Memory is allocated once; push() and query() never allocate.
+ */
 export class SlidingQuantile {
   readonly bins: number;
   readonly capacity: number;
-  private readonly history: Float64Array; // ring buffer [capacity][bins], arrival order
-  private readonly sorted: Float64Array; // [bins][capacity], first `count` entries of each bin sorted
+  private readonly history: Float32Array; // ring buffer [capacity][bins], arrival order
+  private readonly sorted: Float32Array; // [bins][capacity], first `count` entries of each bin sorted
   private head = 0; // next ring slot to write (holds the oldest frame once full)
   private count = 0;
 
@@ -18,20 +20,26 @@ export class SlidingQuantile {
     if (capacity < 1) throw new Error("capacity must be >= 1");
     this.bins = bins;
     this.capacity = capacity;
-    this.history = new Float64Array(bins * capacity);
-    this.sorted = new Float64Array(bins * capacity);
+    this.history = new Float32Array(bins * capacity);
+    this.sorted = new Float32Array(bins * capacity);
   }
 
   get size(): number {
     return this.count;
   }
 
+  reset(): void {
+    this.head = 0;
+    this.count = 0;
+  }
+
   push(frame: ArrayLike<number>): void {
     const { bins, capacity, history, sorted } = this;
     const full = this.count === capacity;
+    const n = this.count;
     for (let k = 0; k < bins; k++) {
       const base = k * capacity;
-      let len = this.count;
+      let len = n;
       if (full) {
         // Remove the oldest value: find it, shift the tail left over it.
         const old = history[this.head * bins + k];
@@ -51,7 +59,7 @@ export class SlidingQuantile {
   }
 
   /** Writes the q-quantile (0..1) of each bin into `out`. Zeros if empty. */
-  query(q: number, out: Float64Array): void {
+  query(q: number, out: Float32Array | Float64Array): void {
     const { bins, capacity, sorted } = this;
     if (this.count === 0) {
       out.fill(0, 0, bins);
@@ -63,7 +71,7 @@ export class SlidingQuantile {
 }
 
 // First index in a[lo, hi) with a[i] >= v.
-function lowerBound(a: Float64Array, lo: number, hi: number, v: number): number {
+function lowerBound(a: Float32Array, lo: number, hi: number, v: number): number {
   while (lo < hi) {
     const mid = (lo + hi) >>> 1;
     if (a[mid] < v) lo = mid + 1;
@@ -73,7 +81,7 @@ function lowerBound(a: Float64Array, lo: number, hi: number, v: number): number 
 }
 
 // First index in a[lo, hi) with a[i] > v.
-function upperBound(a: Float64Array, lo: number, hi: number, v: number): number {
+function upperBound(a: Float32Array, lo: number, hi: number, v: number): number {
   while (lo < hi) {
     const mid = (lo + hi) >>> 1;
     if (a[mid] <= v) lo = mid + 1;

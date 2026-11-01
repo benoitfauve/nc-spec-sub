@@ -1,0 +1,394 @@
+/* Windows 98 look for the 2001 dialog. Everything is scoped under .legacy-desktop. */
+.legacy-desktop {
+  --face: #c0c0c0;
+  --hi: #ffffff;
+  --light: #dfdfdf;
+  --sh: #808080;
+  --dk: #000000;
+  --navy: #000080;
+  min-height: 100vh;
+  background: #008080;
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  overflow-x: hidden;
+  font:
+    11px "Microsoft Sans Serif",
+    "MS Sans Serif",
+    Tahoma,
+    Geneva,
+    sans-serif;
+  color: #000;
+  -webkit-font-smoothing: none;
+}
+.legacy-desktop * {
+  box-sizing: border-box;
+}
+/* undo the modern stylesheet's button look */
+.legacy-desktop button {
+  border-radius: 0;
+  border: 0;
+}
+.legacy-scaler {
+  transform-origin: top center;
+  flex: none;
+}
+.legacy-note {
+  -webkit-font-smoothing: auto;
+  margin: 8px 0 0;
+  color: #e6f4f4;
+  font:
+    11px system-ui,
+    sans-serif;
+  text-align: center;
+}
+.legacy-note a {
+  color: #fff;
+}
+.legacy-note .linkish {
+  background: none;
+  border: 0;
+  color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+.w-window {
+  display: inline-block;
+  background: var(--face);
+  padding: 3px;
+  box-shadow:
+    inset -1px -1px var(--dk),
+    inset 1px 1px var(--light),
+    inset -2px -2px var(--sh),
+    inset 2px 2px var(--hi);
+}
+.w-title {
+  height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 2px;
+  background: linear-gradient(90deg, var(--navy), #1084d0);
+  color: #fff;
+  font-weight: bold;
+}
+.w-caption {
+  flex: 1;
+  white-space: nowrap;
+}
+.w-sysicon {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+}
+.w-cbtn {
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  border: 0;
+  background: var(--face);
+  color: #000;
+  font:
+    bold 9px Tahoma,
+    sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset -1px -1px var(--dk),
+    inset 1px 1px var(--hi),
+    inset -2px -2px var(--sh),
+    inset 2px 2px var(--light);
+}
+.w-cbtn.close {
+  margin-left: 2px;
+  cursor: pointer;
+}
+.w-client {
+  position: relative;
+}
+.w-client > * {
+  position: absolute;
+}
+
+.w-group {
+  border: 1px solid var(--sh);
+  box-shadow:
+    1px 1px var(--hi),
+    inset 1px 1px var(--hi);
+}
+/* the title's face-coloured background hides both lines of the etched edge */
+.w-group-title {
+  position: absolute;
+  top: -8px;
+  left: 6px;
+  padding: 0 2px;
+  line-height: 14px;
+  background: var(--face);
+  white-space: nowrap;
+}
+.w-text {
+  white-space: nowrap;
+  line-height: 13px;
+}
+.w-sunken {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  border-top: 1px solid var(--sh);
+  border-left: 1px solid var(--sh);
+  border-bottom: 1px solid var(--hi);
+  border-right: 1px solid var(--hi);
+}
+.w-bitmap {
+  display: block;
+  image-rendering: pixelated;
+}
+.w-icon {
+  image-rendering: pixelated;
+}
+
+.w-button {
+  padding: 0;
+  border: 0;
+  background: var(--face);
+  color: #000;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    inset -1px -1px var(--dk),
+    inset 1px 1px var(--hi),
+    inset -2px -2px var(--sh),
+    inset 2px 2px var(--light);
+}
+.w-button.default {
+  outline: 1px solid #000;
+  outline-offset: -1px;
+  box-shadow:
+    inset -2px -2px var(--dk),
+    inset 2px 2px var(--hi),
+    inset -3px -3px var(--sh),
+    inset 3px 3px var(--light);
+}
+.w-button:active:not(:disabled) {
+  box-shadow:
+    inset 1px 1px var(--dk),
+    inset -1px -1px var(--hi),
+    inset 2px 2px var(--sh),
+    inset -2px -2px var(--light);
+}
+.w-button:active:not(:disabled) span {
+  transform: translate(1px, 1px);
+}
+.w-button:disabled {
+  color: var(--sh);
+  text-shadow: 1px 1px var(--hi);
+  cursor: default;
+}
+.w-button:focus-visible span,
+.w-check input:focus-visible ~ span,
+.w-scroll:focus-visible,
+.w-combo select:focus-visible + * {
+  outline: 1px dotted #000;
+}
+.w-button.static {
+  position: static;
+  width: 64px;
+  height: 22px;
+  margin-left: auto;
+}
+
+.w-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: pre;
+  cursor: pointer;
+  user-select: none;
+}
+.w-check input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.w-check i {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  background: #fff;
+  box-shadow:
+    inset 1px 1px var(--sh),
+    inset -1px -1px var(--hi),
+    inset 2px 2px var(--dk),
+    inset -2px -2px var(--light);
+  position: relative;
+}
+.w-check input:checked + i::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  width: 4px;
+  height: 7px;
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(40deg);
+}
+
+.w-combo {
+  height: 21px;
+  background: #fff;
+  box-shadow:
+    inset 1px 1px var(--sh),
+    inset -1px -1px var(--hi),
+    inset 2px 2px var(--dk),
+    inset -2px -2px var(--light);
+  display: flex;
+  align-items: center;
+  padding-left: 4px;
+}
+.w-combo-text {
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+  padding-right: 18px;
+}
+.w-combo-arrow {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  width: 16px;
+  background: var(--face);
+  box-shadow:
+    inset -1px -1px var(--dk),
+    inset 1px 1px var(--hi),
+    inset -2px -2px var(--sh),
+    inset 2px 2px var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.w-combo-arrow i {
+  width: 0;
+  height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid #000;
+}
+.w-combo select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  font:
+    11px Tahoma,
+    sans-serif;
+}
+
+.w-scroll {
+  display: flex;
+  background: repeating-conic-gradient(var(--hi) 0 25%, var(--face) 0 50%) 0 0 / 2px 2px;
+  outline-offset: 1px;
+}
+.w-arrow {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: var(--face);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    inset -1px -1px var(--dk),
+    inset 1px 1px var(--hi),
+    inset -2px -2px var(--sh),
+    inset 2px 2px var(--light);
+}
+.w-arrow:active {
+  box-shadow:
+    inset 1px 1px var(--sh),
+    inset -1px -1px var(--sh);
+}
+.w-arrow i {
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.w-arrow i.left {
+  border-right: 4px solid #000;
+}
+.w-arrow i.right {
+  border-left: 4px solid #000;
+}
+.w-track {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+}
+.w-thumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--face);
+  cursor: grab;
+  touch-action: none;
+  box-shadow:
+    inset -1px -1px var(--dk),
+    inset 1px 1px var(--light),
+    inset -2px -2px var(--sh),
+    inset 2px 2px var(--hi);
+}
+
+.w-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 0.15);
+  z-index: 10;
+}
+.w-window.about {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+}
+.about-body {
+  padding: 12px;
+}
+.about-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.about-head p {
+  margin: 0 0 6px;
+}
+.about-body .credits {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--sh);
+  box-shadow: 0 -1px var(--hi);
+}
+.about-body .credits h3 {
+  font-size: 11px;
+  margin: 8px 0 2px;
+}
+.about-body .credits p {
+  margin: 0;
+}
