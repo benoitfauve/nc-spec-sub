@@ -145,31 +145,3 @@ Per bin and frame, with `m = 31`:
 The shifts are `O(m)` in theory, but for a window this small a memory move is very
 cheap. Measured on the 15 s `70mph.wav` (8 kHz) for the whole program, FFTs
 included: about 99 ms with the plain sort, about 39 ms with the sorted window.
-
-## Why not two heaps?
-
-The textbook LeetCode 480 answer uses a max-heap for the lower half and a min-heap for
-the upper half, with lazy deletion for values that leave the window. It is `O(log m)`
-per update, but:
-
-- it only gives the median, while the sorted window gives any quantile for free,
-  which the full project uses (its `quantile` parameter);
-- removing an arbitrary value from a heap needs lazy deletion and a hash map, which
-  is more code and more memory;
-- with `m` around 30, the sorted array's `O(m)` move is faster in practice.
-
-For a much larger window (thousands of values) an order-statistic tree or a skip list
-would win, but that is not the case here.
-
-## Relation to the papers
-
-This is the "efficient" update from Evans, Mason and Fauve, *Efficient real-time noise
-estimation without explicit speech, non-speech detection*, DSP 2002, also used in the
-2001 real-time demo. The window is stored as `Float32Array`, half the memory of
-`Float64Array`, and the format the browser's audio worklet works in. On
-`throwitaway.noisy.wav` (alpha 0.25, 1 and 2, both warm-up modes) the single-precision
-median is, in every bin and frame, the double-precision median rounded to single
-precision: the sort order never changes. The denoised output then differs by at most
-1 LSB on a handful of 16-bit samples. The full project stores magnitudes rather than
-power; the median is the same either way, because squaring does not change the order
-of non-negative values.

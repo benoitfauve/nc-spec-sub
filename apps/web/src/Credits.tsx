@@ -5,7 +5,7 @@ export function Credits() {
       <h3>Research</h3>
       <p>
         Speech and Image Group (SIG), University of Wales Swansea, 2001: John Mason (group lead), Nicholas Evans (PhD
-        candidate) and Benoît Fauve (Erasmus student from ESPM, now Centrale Marseille).
+        candidate) and Benoît Fauve (Erasmus student from ENSPM, now Centrale Marseille).
       </p>
       <p>
         N. W. D. Evans, J. S. Mason,{" "}
