@@ -1,12 +1,15 @@
 # nc-spec-sub
 
+[![CI](https://github.com/benoitfauve/nc-spec-sub/actions/workflows/ci.yml/badge.svg)](https://github.com/benoitfauve/nc-spec-sub/actions/workflows/ci.yml)
+
 Real-time **noise compensation** for speech: quantile-based noise estimation and
 non-linear spectral subtraction (NLSS), followed by two IIR filters. It runs in the
-browser and on the command line, with one TypeScript DSP core.
+browser and on the command line, with one TypeScript DSP core. The name stands for
+**n**oise **c**ompensation by **spec**tral **sub**traction.
 
 It re-creates a 2001 real-time demo (an MFC / Visual C++ app) built at the Speech and
 Image Group (SIG), University of Wales Swansea, by John Mason (group lead), Nicholas
-Evans (PhD candidate) and Benoît Fauve (Erasmus student from ESPM, now Centrale
+Evans (PhD candidate) and Benoît Fauve (Erasmus student from ENSPM, now Centrale
 Marseille), as a side demo for:
 
 - N. W. D. Evans, J. S. Mason, *Noise estimation without explicit speech, non-speech
@@ -16,6 +19,10 @@ Marseille), as a side demo for:
 
 The web app has two views over the same engine: a **modern** one, and a faithful **2001**
 Windows-style re-creation of the original dialog.
+
+**Live demo**: <https://benoitfauve.github.io/nc-spec-sub/> (runs in the browser, no audio leaves the device).
+
+![nc-spec-sub web app, modern view, processing the 2001 recording "throw it away" in car noise](.github/screenshot-modern.png)
 
 ## Quick start
 
@@ -163,7 +170,10 @@ npm test
 ```
 
 The same four checks run before each commit through [pre-commit](https://pre-commit.com/)
-(`.pre-commit-config.yaml`). After cloning: `pip install pre-commit && pre-commit install`.
+(`.pre-commit-config.yaml`), and in GitHub Actions on every push and pull request
+(`.github/workflows/ci.yml`). Pushes to `main` also build the web app and deploy it to
+GitHub Pages (`.github/workflows/pages.yml`). After cloning:
+`pip install pre-commit && pre-commit install`.
 
 ## Licence and credits
 
